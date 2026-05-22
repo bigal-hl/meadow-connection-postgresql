@@ -1,79 +1,165 @@
 {
-	"Generated": "2026-04-10T17:20:54.154Z",
+	"Generated": "2026-05-22T05:39:43.056Z",
+	"Mode": "module",
 	"GitHubOrg": "stevenvelozo",
 	"DefaultBranch": "master",
-	"Groups": [
-		{
-			"Name": "Dist",
-			"Key": "dist",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "indoctrinate_content_staging",
-					"Repo": "indoctrinate_content_staging",
-					"Group": "dist",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		},
-		{
-			"Name": "Docs",
-			"Key": "docs",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "api",
-					"Repo": "api",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"api/connect.md",
-						"api/connectAsync.md",
-						"api/createTable.md",
-						"api/createTables.md",
-						"api/generateCreateTableStatement.md",
-						"api/generateDropTableStatement.md",
-						"api/pool.md",
-						"api/reference.md"
-					]
-				},
-				{
-					"Name": "css",
-					"Repo": "css",
-					"Group": "docs",
-					"Branch": "master",
-					"HasDocs": true,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": [
-						"css/docuserve.css"
-					]
-				}
-			]
-		},
-		{
-			"Name": "Test",
-			"Key": "test",
-			"Description": "",
-			"Modules": [
-				{
-					"Name": "docker-init",
-					"Repo": "docker-init",
-					"Group": "test",
-					"Branch": "master",
-					"HasDocs": false,
-					"HasCover": false,
-					"Sidebar": [],
-					"DocFiles": []
-				}
-			]
-		}
-	]
+	"Module": {
+		"Name": "meadow-connection-postgresql",
+		"Repo": "meadow-connection-postgresql",
+		"Group": "",
+		"Branch": "master",
+		"HasDocs": true,
+		"HasCover": true,
+		"Sidebar": [
+			{
+				"Title": "**Getting Started**",
+				"Children": [
+					{
+						"Title": "Overview",
+						"Path": "README.md"
+					},
+					{
+						"Title": "Quickstart",
+						"Path": "quickstart.md"
+					}
+				]
+			},
+			{
+				"Title": "**Concepts**",
+				"Children": [
+					{
+						"Title": "Architecture",
+						"Path": "architecture.md"
+					},
+					{
+						"Title": "Schema & Column Types",
+						"Path": "schema.md"
+					}
+				]
+			},
+			{
+				"Title": "**API Reference**",
+				"Children": [
+					{
+						"Title": "Full Reference",
+						"Path": "api/reference.md"
+					},
+					{
+						"Title": "Connection",
+						"Children": []
+					},
+					{
+						"Title": "connectAsync(fCallback)",
+						"Path": "api/connectAsync.md"
+					},
+					{
+						"Title": "connect()",
+						"Path": "api/connect.md"
+					},
+					{
+						"Title": "Accessors",
+						"Children": []
+					},
+					{
+						"Title": "pool",
+						"Path": "api/pool.md"
+					},
+					{
+						"Title": "Schema Management",
+						"Children": []
+					},
+					{
+						"Title": "generateCreateTableStatement()",
+						"Path": "api/generateCreateTableStatement.md"
+					},
+					{
+						"Title": "createTable()",
+						"Path": "api/createTable.md"
+					},
+					{
+						"Title": "createTables()",
+						"Path": "api/createTables.md"
+					},
+					{
+						"Title": "generateDropTableStatement()",
+						"Path": "api/generateDropTableStatement.md"
+					}
+				]
+			},
+			{
+				"Title": "**Ecosystem**",
+				"Children": [
+					{
+						"Title": "Meadow",
+						"Path": "https://github.com/stevenvelozo/meadow"
+					},
+					{
+						"Title": "FoxHound",
+						"Path": "https://github.com/stevenvelozo/foxhound"
+					},
+					{
+						"Title": "Stricture",
+						"Path": "https://github.com/stevenvelozo/stricture"
+					},
+					{
+						"Title": "Fable",
+						"Path": "https://github.com/stevenvelozo/fable"
+					},
+					{
+						"Title": "Connectors",
+						"Children": []
+					},
+					{
+						"Title": "MySQL",
+						"Path": "https://github.com/stevenvelozo/meadow-connection-mysql"
+					},
+					{
+						"Title": "MSSQL",
+						"Path": "https://github.com/stevenvelozo/meadow-connection-mssql"
+					},
+					{
+						"Title": "SQLite",
+						"Path": "https://github.com/stevenvelozo/meadow-connection-sqlite"
+					},
+					{
+						"Title": "MongoDB",
+						"Path": "https://github.com/stevenvelozo/meadow-connection-mongodb"
+					},
+					{
+						"Title": "RocksDB",
+						"Path": "https://github.com/stevenvelozo/meadow-connection-rocksdb"
+					},
+					{
+						"Title": "Dgraph",
+						"Path": "https://github.com/stevenvelozo/meadow-connection-dgraph"
+					}
+				]
+			}
+		],
+		"DocFiles": [
+			".nojekyll",
+			"README.md",
+			"_brand.json",
+			"_cover.md",
+			"_sidebar.md",
+			"_topbar.md",
+			"_version.json",
+			"api/connect.md",
+			"api/connectAsync.md",
+			"api/createTable.md",
+			"api/createTables.md",
+			"api/generateCreateTableStatement.md",
+			"api/generateDropTableStatement.md",
+			"api/pool.md",
+			"api/reference.md",
+			"api.md",
+			"architecture.md",
+			"index.html",
+			"quickstart.md",
+			"retold-catalog.json",
+			"retold-keyword-index.json",
+			"schema.md"
+		]
+	},
+	"Groups": []
 }
