@@ -1,5 +1,7 @@
 # meadow-connection-postgresql
 
+> **[&#9654; Read the Meadow-Connection-Postgresql Documentation](https://stevenvelozo.github.io/meadow-connection-postgresql/)** &mdash; interactive docs with the full API reference.
+
 PostgreSQL connection service for the Meadow data access layer.
 
 [![Coverage Status](https://coveralls.io/repos/github/stevenvelozo/meadow-connection-postgresql/badge.svg?branch=main)](https://coveralls.io/github/stevenvelozo/meadow-connection-postgresql?branch=main)
