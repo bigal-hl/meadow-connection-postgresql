@@ -2,4 +2,4 @@
 - [Quickstart](quickstart.md)
 - [Architecture](architecture.md)
 - [API Reference](api/reference.md)
-- [GitHub](https://github.com/stevenvelozo/meadow-connection-postgresql)
+- [GitHub](https://github.com/fable-retold/meadow-connection-postgresql)

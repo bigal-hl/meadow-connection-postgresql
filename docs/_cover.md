@@ -12,4 +12,4 @@
 [Overview](README.md)
 [Quickstart](quickstart.md)
 [API Reference](api/reference.md)
-[GitHub](https://github.com/stevenvelozo/meadow-connection-postgresql)
+[GitHub](https://github.com/fable-retold/meadow-connection-postgresql)
