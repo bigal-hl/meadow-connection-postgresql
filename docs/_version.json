@@ -2,6 +2,6 @@
 	"Name": "meadow-connection-postgresql",
 	"Version": "1.0.5",
 	"Description": "Meadow PostgreSQL Connection Plugin",
-	"GeneratedAt": "2026-05-26T18:19:26.074Z",
-	"GitCommit": "c886acc"
+	"GeneratedAt": "2026-05-26T21:12:30.068Z",
+	"GitCommit": "3d48b7a"
 }
