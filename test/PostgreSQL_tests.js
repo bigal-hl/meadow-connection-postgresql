@@ -229,6 +229,40 @@ suite
 						Expect(tmpResult).to.equal('DROP TABLE IF EXISTS "Animal";');
 					}
 				);
+				test
+				(
+					'Nullable: true on String/Numeric/Boolean columns omits NOT NULL',
+					() =>
+					{
+						let _Fable = new libFable(_FableConfig);
+						_Fable.serviceManager.addServiceType('MeadowPostgreSQLProvider', libMeadowConnectionPostgreSQL);
+						_Fable.serviceManager.instantiateServiceProvider('MeadowPostgreSQLProvider');
+
+						let tmpSchema = {
+							TableName: 'Sample',
+							Columns: [
+								{ Column: 'IDSample',    DataType: 'ID' },
+								{ Column: 'Title',       DataType: 'String',  Size: 128, Nullable: true },
+								{ Column: 'TitleNN',     DataType: 'String',  Size: 128, Nullable: false },
+								{ Column: 'Count',       DataType: 'Numeric',            Nullable: true },
+								{ Column: 'CountNN',     DataType: 'Numeric',            Nullable: false },
+								{ Column: 'Active',      DataType: 'Boolean',            Nullable: true },
+								{ Column: 'Description', DataType: 'Text',               Nullable: false },
+								{ Column: 'ParentID',    DataType: 'ForeignKey',         Nullable: true }
+							]
+						};
+						let tmpResult = _Fable.MeadowPostgreSQLProvider.generateCreateTableStatement(tmpSchema);
+						// Nullable column emits plain VARCHAR(N), no NOT NULL, no DEFAULT.
+						Expect(tmpResult).to.contain('"Title" VARCHAR(128),');
+						// Explicit Nullable: false preserves the historical NOT NULL DEFAULT ''.
+						Expect(tmpResult).to.contain('"TitleNN" VARCHAR(128) NOT NULL DEFAULT \'\'');
+						Expect(tmpResult).to.contain('"Count" INTEGER,');
+						Expect(tmpResult).to.contain('"CountNN" INTEGER NOT NULL DEFAULT 0');
+						Expect(tmpResult).to.contain('"Active" BOOLEAN,');
+						Expect(tmpResult).to.contain('"Description" TEXT NOT NULL');
+						Expect(tmpResult).to.contain('"ParentID" INTEGER\n');
+					}
+				);
 			}
 		);
 
