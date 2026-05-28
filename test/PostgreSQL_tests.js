@@ -202,13 +202,22 @@ suite
 						Expect(tmpResult).to.contain('CREATE TABLE IF NOT EXISTS');
 						Expect(tmpResult).to.contain('"Animal"');
 						Expect(tmpResult).to.contain('SERIAL PRIMARY KEY');
-						Expect(tmpResult).to.contain('VARCHAR(36)');
-						Expect(tmpResult).to.contain('VARCHAR(128)');
-						Expect(tmpResult).to.contain('INTEGER NOT NULL DEFAULT 0');
+						// GUID columns are structurally NOT NULL with the '0xDe' default —
+						// every row has a meadow-generated identity GUID.
+						Expect(tmpResult).to.contain('VARCHAR(36) NOT NULL DEFAULT \'0xDe\'');
+						// All other types are nullable by default — callers opt into NOT NULL
+						// via `Nullable: false` on the column descriptor.
+						Expect(tmpResult).to.contain('"Name" VARCHAR(128)');
+						Expect(tmpResult).to.contain('"Age" INTEGER');
 						Expect(tmpResult).to.contain('DECIMAL(10,2)');
-						Expect(tmpResult).to.contain('TEXT');
-						Expect(tmpResult).to.contain('TIMESTAMP');
-						Expect(tmpResult).to.contain('BOOLEAN NOT NULL DEFAULT false');
+						Expect(tmpResult).to.contain('"Description" TEXT');
+						Expect(tmpResult).to.contain('"Birthday" TIMESTAMP');
+						Expect(tmpResult).to.contain('"Active" BOOLEAN');
+						Expect(tmpResult).to.contain('"IDFarm" INTEGER');
+						// No spurious NOT NULL on business columns (only on ID/GUID).
+						Expect(tmpResult).to.not.contain('"Name" VARCHAR(128) NOT NULL');
+						Expect(tmpResult).to.not.contain('"Age" INTEGER NOT NULL');
+						Expect(tmpResult).to.not.contain('"Active" BOOLEAN NOT NULL');
 						// Should NOT contain MySQL-specific syntax
 						Expect(tmpResult).to.not.contain('AUTO_INCREMENT');
 						Expect(tmpResult).to.not.contain('TINYINT');
@@ -231,7 +240,7 @@ suite
 				);
 				test
 				(
-					'Nullable: true on String/Numeric/Boolean columns omits NOT NULL',
+					'Nullable: false on business columns opts into NOT NULL (default is nullable)',
 					() =>
 					{
 						let _Fable = new libFable(_FableConfig);
@@ -242,6 +251,7 @@ suite
 							TableName: 'Sample',
 							Columns: [
 								{ Column: 'IDSample',    DataType: 'ID' },
+								{ Column: 'GUIDSample',  DataType: 'GUID',    Size: 36 },
 								{ Column: 'Title',       DataType: 'String',  Size: 128, Nullable: true },
 								{ Column: 'TitleNN',     DataType: 'String',  Size: 128, Nullable: false },
 								{ Column: 'Count',       DataType: 'Numeric',            Nullable: true },
@@ -252,15 +262,19 @@ suite
 							]
 						};
 						let tmpResult = _Fable.MeadowPostgreSQLProvider.generateCreateTableStatement(tmpSchema);
-						// Nullable column emits plain VARCHAR(N), no NOT NULL, no DEFAULT.
+						// Default + explicit Nullable: true → plain type, no NOT NULL.
 						Expect(tmpResult).to.contain('"Title" VARCHAR(128),');
-						// Explicit Nullable: false preserves the historical NOT NULL DEFAULT ''.
-						Expect(tmpResult).to.contain('"TitleNN" VARCHAR(128) NOT NULL DEFAULT \'\'');
 						Expect(tmpResult).to.contain('"Count" INTEGER,');
-						Expect(tmpResult).to.contain('"CountNN" INTEGER NOT NULL DEFAULT 0');
 						Expect(tmpResult).to.contain('"Active" BOOLEAN,');
+						Expect(tmpResult).to.contain('"ParentID" INTEGER');
+						// Explicit Nullable: false → NOT NULL (no spurious DEFAULT —
+						// callers layer a meaningful default on top if they want one).
+						Expect(tmpResult).to.contain('"TitleNN" VARCHAR(128) NOT NULL');
+						Expect(tmpResult).to.contain('"CountNN" INTEGER NOT NULL');
 						Expect(tmpResult).to.contain('"Description" TEXT NOT NULL');
-						Expect(tmpResult).to.contain('"ParentID" INTEGER\n');
+						// ID and GUID are structurally NOT NULL regardless of Nullable.
+						Expect(tmpResult).to.contain('"IDSample" SERIAL PRIMARY KEY');
+						Expect(tmpResult).to.contain('"GUIDSample" VARCHAR(36) NOT NULL DEFAULT \'0xDe\'');
 					}
 				);
 			}

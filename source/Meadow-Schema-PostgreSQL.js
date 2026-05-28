@@ -56,13 +56,21 @@ class MeadowSchemaPostgreSQL extends libFableServiceProviderBase
 			}
 
 			tmpCreateTableStatement += `\n`;
-			// Per-column nullability. The descriptor → Meadow flow sets
-			// `Nullable: false` when the source column is explicitly NOT
-			// NULL; everything else (true, undefined, absent) leaves the
-			// column nullable in the lake — important for clone targets
-			// where the source data may legitimately contain NULLs and a
-			// hardcoded `NOT NULL DEFAULT ''` would either silently coerce
-			// them to '' (data corruption) or reject the upsert outright.
+			// Per-column nullability — NULLABLE BY DEFAULT.
+			//
+			// The Postgres schema engine deliberately does NOT emit
+			// `NOT NULL` unless the column descriptor explicitly says
+			// `Nullable: false`. The only structural exceptions are:
+			//   - ID columns      → `SERIAL PRIMARY KEY` (implicitly NOT NULL)
+			//   - GUID columns    → always `NOT NULL DEFAULT '0xDe'`
+			//
+			// This is the right default for clone/ETL targets, where the
+			// source data may legitimately contain NULLs and a hardcoded
+			// `NOT NULL DEFAULT ''` would silently coerce them to ''
+			// (data corruption) or reject the upsert outright. Callers
+			// who genuinely need a NOT NULL business column should set
+			// `Nullable: false` on the descriptor — that's the explicit
+			// opt-in.
 			let tmpNotNull = (tmpColumn.Nullable === false) ? ' NOT NULL' : '';
 			// Dump out each column......
 			switch (tmpColumn.DataType)
@@ -82,46 +90,22 @@ class MeadowSchemaPostgreSQL extends libFableServiceProviderBase
 					{
 						tmpSize = 255;
 					}
-					tmpCreateTableStatement += `        "${tmpColumn.Column}" VARCHAR(${tmpSize}) DEFAULT '0xDe'`;
+					// GUID is structurally NOT NULL — every row carries
+					// its meadow-generated identity GUID; the engine never
+					// supports a NULL value here.
+					tmpCreateTableStatement += `        "${tmpColumn.Column}" VARCHAR(${tmpSize}) NOT NULL DEFAULT '0xDe'`;
 					break;
 				case 'ForeignKey':
-					if (tmpColumn.Nullable === false || tmpColumn.Nullable === undefined)
-					{
-						// Preserve the historical default (NOT NULL DEFAULT 0)
-						// for callers that didn't opt into Nullable yet.
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" INTEGER NOT NULL DEFAULT 0`;
-					}
-					else
-					{
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" INTEGER`;
-					}
+					tmpCreateTableStatement += `        "${tmpColumn.Column}" INTEGER${tmpNotNull}`;
 					break;
 				case 'Numeric':
-					if (tmpColumn.Nullable === false || tmpColumn.Nullable === undefined)
-					{
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" INTEGER NOT NULL DEFAULT 0`;
-					}
-					else
-					{
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" INTEGER`;
-					}
+					tmpCreateTableStatement += `        "${tmpColumn.Column}" INTEGER${tmpNotNull}`;
 					break;
 				case 'Decimal':
 					tmpCreateTableStatement += `        "${tmpColumn.Column}" DECIMAL(${tmpColumn.Size})${tmpNotNull}`;
 					break;
 				case 'String':
-					if (tmpColumn.Nullable === false || tmpColumn.Nullable === undefined)
-					{
-						// Historical default — keeps existing schemas
-						// behaving the same when the caller hasn't started
-						// emitting Nullable yet (avoid blowing up integration
-						// schemas that rely on the empty-string default).
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" VARCHAR(${tmpColumn.Size}) NOT NULL DEFAULT ''`;
-					}
-					else
-					{
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" VARCHAR(${tmpColumn.Size})`;
-					}
+					tmpCreateTableStatement += `        "${tmpColumn.Column}" VARCHAR(${tmpColumn.Size})${tmpNotNull}`;
 					break;
 				case 'Text':
 					tmpCreateTableStatement += `        "${tmpColumn.Column}" TEXT${tmpNotNull}`;
@@ -130,14 +114,7 @@ class MeadowSchemaPostgreSQL extends libFableServiceProviderBase
 					tmpCreateTableStatement += `        "${tmpColumn.Column}" TIMESTAMP${tmpNotNull}`;
 					break;
 				case 'Boolean':
-					if (tmpColumn.Nullable === false || tmpColumn.Nullable === undefined)
-					{
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" BOOLEAN NOT NULL DEFAULT false`;
-					}
-					else
-					{
-						tmpCreateTableStatement += `        "${tmpColumn.Column}" BOOLEAN`;
-					}
+					tmpCreateTableStatement += `        "${tmpColumn.Column}" BOOLEAN${tmpNotNull}`;
 					break;
 				case 'JSON':
 					tmpCreateTableStatement += `        "${tmpColumn.Column}" TEXT${tmpNotNull}`;
