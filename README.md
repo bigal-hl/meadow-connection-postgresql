@@ -4,7 +4,6 @@
 
 PostgreSQL connection service for the Meadow data access layer.
 
-[![Coverage Status](https://coveralls.io/repos/github/stevenvelozo/meadow-connection-postgresql/badge.svg?branch=main)](https://coveralls.io/github/stevenvelozo/meadow-connection-postgresql?branch=main)
 [![Build Status](https://github.com/fable-retold/meadow-connection-postgresql/workflows/Tests/badge.svg)](https://github.com/fable-retold/meadow-connection-postgresql/actions)
 [![npm version](https://badge.fury.io/js/meadow-connection-postgresql.svg)](https://www.npmjs.com/package/meadow-connection-postgresql)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
