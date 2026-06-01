@@ -2,7 +2,7 @@
 
 > PostgreSQL connection service for the Meadow data access layer
 
-- **Fable Service Provider** -- seamless dependency injection integration
+- **Fable Service Provider** -- smooth dependency injection integration
 - **Connection Pooling** -- managed pool via the `pg` driver
 - **SQL DDL Generation** -- PostgreSQL-native `CREATE TABLE` statements
 - **Quoted Identifiers** -- safe handling of reserved words

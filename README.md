@@ -1,6 +1,6 @@
 # meadow-connection-postgresql
 
-> **[&#9654; Read the Meadow-Connection-Postgresql Documentation](https://fable-retold.github.io/meadow-connection-postgresql/)** &mdash; interactive docs with the full API reference.
+> **[Read the Meadow-Connection-Postgresql Documentation](https://fable-retold.github.io/meadow-connection-postgresql/)** - interactive docs with the full API reference.
 
 PostgreSQL connection service for the Meadow data access layer.
 
