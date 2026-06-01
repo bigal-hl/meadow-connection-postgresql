@@ -86,11 +86,11 @@ Application
 
 | Module | Purpose |
 |--------|---------|
-| [meadow](https://github.com/fable-retold/meadow) | Data access layer and ORM |
-| [foxhound](https://github.com/fable-retold/foxhound) | Query generation DSL |
-| [stricture](https://github.com/fable-retold/stricture) | Schema definition and DDL tools |
-| [meadow-connection-mysql](https://github.com/fable-retold/meadow-connection-mysql) | MySQL / MariaDB connector |
-| [meadow-connection-mssql](https://github.com/fable-retold/meadow-connection-mssql) | Microsoft SQL Server connector |
-| [meadow-connection-sqlite](https://github.com/fable-retold/meadow-connection-sqlite) | SQLite connector |
-| [meadow-connection-mongodb](https://github.com/fable-retold/meadow-connection-mongodb) | MongoDB connector |
-| [meadow-connection-rocksdb](https://github.com/fable-retold/meadow-connection-rocksdb) | RocksDB key-value connector |
+| [meadow](https://fable-retold.github.io/meadow/) | Data access layer and ORM |
+| [foxhound](https://fable-retold.github.io/foxhound/) | Query generation DSL |
+| [stricture](https://fable-retold.github.io/stricture/) | Schema definition and DDL tools |
+| [meadow-connection-mysql](https://fable-retold.github.io/meadow-connection-mysql/) | MySQL / MariaDB connector |
+| [meadow-connection-mssql](https://fable-retold.github.io/meadow-connection-mssql/) | Microsoft SQL Server connector |
+| [meadow-connection-sqlite](https://fable-retold.github.io/meadow-connection-sqlite/) | SQLite connector |
+| [meadow-connection-mongodb](https://fable-retold.github.io/meadow-connection-mongodb/) | MongoDB connector |
+| [meadow-connection-rocksdb](https://fable-retold.github.io/meadow-connection-rocksdb/) | RocksDB key-value connector |
