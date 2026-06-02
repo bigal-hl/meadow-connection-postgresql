@@ -1,0 +1,14 @@
+flowchart LR
+	subgraph Input Sources
+		OPT[Constructor Options]
+		SET[fable.settings.PostgreSQL]
+	end
+	subgraph Normalization
+		NORM["Property Mapping<br/>Server -> host<br/>Port -> port<br/>User -> user<br/>Password -> password<br/>Database -> database<br/>ConnectionPoolLimit -> max"]
+	end
+	subgraph Output
+		PGPOOL["pg.Pool Config<br/>{ host, port, user,<br/>  password, database, max }"]
+	end
+	OPT --> NORM
+	SET --> NORM
+	NORM --> PGPOOL

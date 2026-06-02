@@ -1,0 +1,7 @@
+flowchart TD
+	A[connect called] --> B{Already connected?}
+	B -->|Yes| C[Log error with masked password]
+	C --> D[Return without action]
+	B -->|No| E[Log connection info]
+	E --> F[Create pg.Pool]
+	F --> G[Set connected = true]

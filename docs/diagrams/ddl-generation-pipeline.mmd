@@ -1,0 +1,11 @@
+flowchart TD
+	A[Meadow Table Schema] --> B[generateCreateTableStatement]
+	B --> C["SQL DDL String<br/>CREATE TABLE IF NOT EXISTS..."]
+	C --> D{createTable called?}
+	D -->|Yes| E[pool.query executes DDL]
+	E --> F{Result?}
+	F -->|Success| G[Callback - no error]
+	F -->|Error 42P07| H[Log warning - table exists]
+	H --> G
+	F -->|Other Error| I[Callback with error]
+	D -->|No| J[Return DDL string for inspection]

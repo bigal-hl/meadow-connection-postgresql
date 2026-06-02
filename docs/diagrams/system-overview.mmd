@@ -1,0 +1,18 @@
+graph TB
+	subgraph Application Layer
+		APP[Application Code]
+		MEA[Meadow ORM]
+		FH[FoxHound Query Dialect]
+	end
+	subgraph Connection Layer
+		MCP["meadow-connection-postgresql<br/>(MeadowConnectionPostgreSQL)"]
+		POOL[pg.Pool]
+	end
+	subgraph PostgreSQL Server
+		PG[(PostgreSQL)]
+	end
+	APP --> MEA
+	MEA --> FH
+	FH --> MCP
+	MCP --> POOL
+	POOL --> PG

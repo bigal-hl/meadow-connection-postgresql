@@ -4,66 +4,13 @@
 
 The PostgreSQL connector bridges Meadow's data access abstraction with the `pg` (node-postgres) driver. It follows the Fable service provider pattern, providing connection pool management and SQL DDL generation.
 
-```mermaid
-graph TB
-	subgraph Application Layer
-		APP[Application Code]
-		MEA[Meadow ORM]
-		FH[FoxHound Query Dialect]
-	end
-	subgraph Connection Layer
-		MCP["meadow-connection-postgresql<br/>(MeadowConnectionPostgreSQL)"]
-		POOL[pg.Pool]
-	end
-	subgraph PostgreSQL Server
-		PG[(PostgreSQL)]
-	end
-	APP --> MEA
-	MEA --> FH
-	FH --> MCP
-	MCP --> POOL
-	POOL --> PG
-```
+<!-- bespoke diagram: edit diagrams/system-overview.mmd or .hints.json, then: npx pict-renderer-graph build modules/meadow/meadow-connection-postgresql/docs -->
+![System Overview](diagrams/system-overview.svg)
 
 ## Connection Lifecycle
 
-```mermaid
-sequenceDiagram
-	participant App as Application
-	participant Fable as Fable
-	participant MCP as MeadowConnectionPostgreSQL
-	participant PG as pg.Pool
-	participant Server as PostgreSQL Server
-
-	App->>Fable: new libFable(settings)
-	App->>Fable: addAndInstantiateServiceType()
-	Fable->>MCP: constructor(fable, options)
-	MCP->>MCP: Read PostgreSQL config
-	MCP->>MCP: Normalize property names
-	Note over MCP: Server->host, Port->port, etc.
-
-	alt Auto-Connect Enabled
-		MCP->>MCP: connect()
-	end
-
-	App->>MCP: connectAsync(callback)
-
-	alt Already Connected
-		MCP-->>App: callback(null, pool)
-	else Not Connected
-		MCP->>PG: new pg.Pool(settings)
-		PG->>Server: Establish Connection Pool
-		MCP->>MCP: connected = true
-		MCP-->>App: callback(null, pool)
-	end
-
-	App->>MCP: pool (getter)
-	MCP-->>App: pg.Pool instance
-	App->>PG: pool.query(sql, params, callback)
-	PG->>Server: Execute query
-	Server-->>PG: Result rows
-	PG-->>App: callback(error, result)
-```
+<!-- bespoke diagram: edit diagrams/connection-lifecycle.mmd or .hints.json, then: npx pict-renderer-graph build modules/meadow/meadow-connection-postgresql/docs -->
+![Connection Lifecycle](diagrams/connection-lifecycle.svg)
 
 ## Service Provider Model
 
@@ -96,52 +43,20 @@ classDiagram
 
 The connector normalizes Meadow-style property names to the native `pg` driver format:
 
-```mermaid
-flowchart LR
-	subgraph Input Sources
-		OPT[Constructor Options]
-		SET[fable.settings.PostgreSQL]
-	end
-	subgraph Normalization
-		NORM["Property Mapping<br/>Server -> host<br/>Port -> port<br/>User -> user<br/>Password -> password<br/>Database -> database<br/>ConnectionPoolLimit -> max"]
-	end
-	subgraph Output
-		PGPOOL["pg.Pool Config<br/>{ host, port, user,<br/>  password, database, max }"]
-	end
-	OPT --> NORM
-	SET --> NORM
-	NORM --> PGPOOL
-```
+<!-- bespoke diagram: edit diagrams/settings-flow.mmd or .hints.json, then: npx pict-renderer-graph build modules/meadow/meadow-connection-postgresql/docs -->
+![Settings Flow](diagrams/settings-flow.svg)
 
 ## DDL Generation Pipeline
 
-```mermaid
-flowchart TD
-	A[Meadow Table Schema] --> B[generateCreateTableStatement]
-	B --> C["SQL DDL String<br/>CREATE TABLE IF NOT EXISTS..."]
-	C --> D{createTable called?}
-	D -->|Yes| E[pool.query executes DDL]
-	E --> F{Result?}
-	F -->|Success| G[Callback - no error]
-	F -->|Error 42P07| H[Log warning - table exists]
-	H --> G
-	F -->|Other Error| I[Callback with error]
-	D -->|No| J[Return DDL string for inspection]
-```
+<!-- bespoke diagram: edit diagrams/ddl-generation-pipeline.mmd or .hints.json, then: npx pict-renderer-graph build modules/meadow/meadow-connection-postgresql/docs -->
+![DDL Generation Pipeline](diagrams/ddl-generation-pipeline.svg)
 
 ## Connection Safety
 
 The connector includes several safety mechanisms:
 
-```mermaid
-flowchart TD
-	A[connect called] --> B{Already connected?}
-	B -->|Yes| C[Log error with masked password]
-	C --> D[Return without action]
-	B -->|No| E[Log connection info]
-	E --> F[Create pg.Pool]
-	F --> G[Set connected = true]
-```
+<!-- bespoke diagram: edit diagrams/connection-safety.mmd or .hints.json, then: npx pict-renderer-graph build modules/meadow/meadow-connection-postgresql/docs -->
+![Connection Safety](diagrams/connection-safety.svg)
 
 Key safety features:
 

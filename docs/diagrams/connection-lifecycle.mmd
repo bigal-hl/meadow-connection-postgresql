@@ -1,0 +1,35 @@
+sequenceDiagram
+	participant App as Application
+	participant Fable as Fable
+	participant MCP as MeadowConnectionPostgreSQL
+	participant PG as pg.Pool
+	participant Server as PostgreSQL Server
+
+	App->>Fable: new libFable(settings)
+	App->>Fable: addAndInstantiateServiceType()
+	Fable->>MCP: constructor(fable, options)
+	MCP->>MCP: Read PostgreSQL config
+	MCP->>MCP: Normalize property names
+	Note over MCP: Server->host, Port->port, etc.
+
+	alt Auto-Connect Enabled
+		MCP->>MCP: connect()
+	end
+
+	App->>MCP: connectAsync(callback)
+
+	alt Already Connected
+		MCP-->>App: callback(null, pool)
+	else Not Connected
+		MCP->>PG: new pg.Pool(settings)
+		PG->>Server: Establish Connection Pool
+		MCP->>MCP: connected = true
+		MCP-->>App: callback(null, pool)
+	end
+
+	App->>MCP: pool (getter)
+	MCP-->>App: pg.Pool instance
+	App->>PG: pool.query(sql, params, callback)
+	PG->>Server: Execute query
+	Server-->>PG: Result rows
+	PG-->>App: callback(error, result)
